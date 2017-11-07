@@ -1,0 +1,16 @@
+/**
+ * Created by lenovo on 2017/10/23.
+ */
+import Vue from 'vue'
+import Vuex from 'vuex'
+import {state} from './state'
+import mutations from './mutations'
+import actions from './action'
+import getters from './getters'
+
+Vue.use(Vuex)
+
+export default new Vuex.Store({
+  state, actions, mutations, getters
+})
+

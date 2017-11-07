@@ -1,6 +1,6 @@
 <template>
   <div class="loginContainer">
-    <head-top :head-title="loginWay? '登录':'密码登录'" goBack="true"></head-top>
+    <head-top :head-title="loginWay? '手机号登录':'密码登录'" goBack="true"></head-top>
     <!--<el-form   :model="loginfrom1" status-icon :rules="loginfrom1_rules" ref="loginfrom1"
              label-width="100px" class="demo-ruleForm">
       <el-form-item label="账号" prop="username">
@@ -13,7 +13,17 @@
         <el-input v-model.number="loginfrom1.code"></el-input>
       </el-form-item>
     </el-form>-->
-    <form class="form_wrapper">
+    <form v-if="loginWay" class="form_wrapper">
+      <section class="input_container phone_number">
+        <input type="text" placeholder="請輸入手機號碼" name="phone" maxlength="11" v-model="phoneNumber">
+        <button @click.prevent="getVerifyCode" :class="{right_phone_number: rightPhoneNumber}" v-show="!computedTime">获取验证码</button>
+        <button @click.prevent="" v-show="computedTime">已发送{{computedTime}}s</button>
+      </section>
+      <section class="input_container">
+        <input type="text" placeholder="验证码" name="mobileCode" maxlength="6" v-model="mobileCode">
+      </section>
+    </form>
+    <form v-else="!loginWay" class="form_wrapper">
       <section class="input_container">
         <!--默认情况下，v-model在input事件中同步输入框的值与数据，使用修饰符lazy，从而转变为在change事件中同步-->
         <input type="text" placeholder="账号" v-model.lazy="userAccount">
@@ -56,7 +66,7 @@
   .loginContainer
     width: 100%
     font-size .6rem
-    margin-top 1.95rem
+    padding-top 1.95rem
     form
       padding-top .5rem
       width 100%
@@ -151,6 +161,22 @@
                 font-size: .6rem
                 text-align: center
 
+      .phone_number
+        button
+          box-sizing border-box
+          position absolute
+          top 50%
+          right 1rem
+          width: 5rem
+          height 1.2rem
+          line-height 1.2rem
+          border-radius .2rem
+          transform translateY(-50%)
+          background-color: #e4e4e4
+          color #fff
+          text-align center
+          &.right_phone_number
+            background-color: #6be457
     p.login_tips
       line-height 1.2rem
       color red
@@ -225,7 +251,7 @@
        loginWay: false
        }*/
       return {
-        loginWay: false,
+        loginWay: true,
         showPassword: false,
         userAccount: null,
         passWord: null,
@@ -234,6 +260,10 @@
         showAlert: false,
         alertText: null,
         userInfo: null, // 获取到的用户信息
+        phoneNumber: null,
+        computedTime: false,
+        mobileCode: null,
+        validate_token: null, // 获取手机验证码
       }
     },
     // 实例刚被创建，还未挂载时
@@ -243,19 +273,57 @@
 
     },
     computed: {
-
+      // 实时判断手机号码
+      rightPhoneNumber() {
+        return /^1\d{10}$/gi.test(this.phoneNumber)
+      }
     },
     methods: {
-      ...mapMutations([
-        // this.RECORD_USERINFO(param) 映射为  this.$store.commit('RECORD_USERINFO', param)
-        'RECORD_USERINFO', // this.RECORD_USERINFO() 映射为  this.$store.commit('RECORD_USERINFO')
+      // this.RECORD_USERINFO() 映射为  this.$store.commit('RECORD_USERINFO')
+      // this.RECORD_USERINFO(param) 映射为  this.$store.commit('RECORD_USERINFO', param)
+      ...mapMutations(['RECORD_USERINFO'
       ]),
+      // 获取手机验证码
+      async getVerifyCode() {
+        if(this.rightPhoneNumber){
+          this.computedTime = 30
+          this.timer = setInterval(() => {
+            this.computedTime--
+            if(this.computedTime === 0){
+              clearInterval(this.timer)
+            }
+          }, 1000)
+          // 判断用户是否存在
+          let exsis = await checkExsis(this.phoneNumber, 'mobile')
+          if(exsis.message){
+            this.showAlert = true
+            this.alertText = exsis.message
+            return
+          }else if(!exsis.is_exists) {
+            this.showAlert = true
+            this.alertText = '您输入的手机号尚未绑定'
+            return
+          }
+          // 发送短信验证码
+          let res = await mobileCode(this.phoneNumber)
+          if(res.message){
+            this.showAlert = true
+            this.alertText = res.message
+            return
+          }
+//          存储验证码
+          this.validate_token = res.validate_token
+        }
+      },
       // 获取验证码
       /*async 表示函数里有异步操作，await表示紧跟在后面的表达式需要等待结果
        async 函数返回一个Promise对象，可以使用then方法添加回调函数。
        当函数执行的时候，一旦遇到await就会先返回。等到触发的异步操作完成，再接着执行函数体内后面的语句*/
       async getCaptchaCode(){
         console.log('get')
+        if(this.loginWay){
+          return
+        }
         let res;
         res = await getcaptchas()
         this.$refs.captchaCode.src = res.code
@@ -266,7 +334,17 @@
       },
       async mobileLogin() {
         if(this.loginWay){
-
+          if(!this.rightPhoneNumber) {
+            this.showAlert = true
+            this.alertText = '手机号码不正确'
+            return
+          }else if(!/^\d{6}$/gi.test(this.mobileCode)) {
+            this.showAlert = true
+            this.alertText = '短信验证码不正确'
+            return
+          }
+//          手机号登录
+          this.userInfo = await sendLogin(this.mobileCode, this.right_phone_number, this.validate_token)
         }else {
           if(!this.userAccount){
             this.showAlert = true

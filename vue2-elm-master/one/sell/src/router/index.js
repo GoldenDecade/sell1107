@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import App from '../App'
 import Header from 'components/header/Header.vue'
-// import Home from 'page/home/Home.vue'
+// import Home from 'page/home/Home.vue'  使用require.ensure
 import Login from 'page/login/Login.vue'
 
 

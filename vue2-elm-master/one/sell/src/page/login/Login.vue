@@ -251,7 +251,7 @@
        loginWay: false
        }*/
       return {
-        loginWay: true,
+        loginWay: false,
         showPassword: false,
         userAccount: null,
         passWord: null,

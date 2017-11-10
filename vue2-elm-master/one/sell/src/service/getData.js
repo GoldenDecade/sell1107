@@ -52,3 +52,19 @@ var sendLogin = (code, mobile, validate_token) => fetch('/api/v1/login/app_mobil
  */
 export const accountLogin = (username, password, captcha_code) => fetch('/api/v2/login',
   {username, password, captcha_code}, 'POST');
+
+//city start
+/**
+ * 获取当前所在城市
+ */
+export const currentcity = number => fetch('/api/v1/cities/' + number);
+
+/**
+ * 获取搜索地址
+ */
+export const searchplace = (cityid, value) => fetch('/api/v1/pois', {
+  type: 'search',
+  city_id: cityid,
+  keyword: value
+});
+//city end

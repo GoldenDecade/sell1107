@@ -30,6 +30,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
     try {
       const response = await fetch(url, requestConfig) // fetch 返回promise对象
       const responseJson = await response.json() // 生成JSON.parse(responseText)的结果
+      // console.log(responseJson);
       return responseJson
     } catch(error) {
       throw new Error(error)

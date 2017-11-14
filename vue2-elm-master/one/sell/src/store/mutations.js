@@ -1,7 +1,9 @@
 import {
   RECORD_ADDRESS,
   RECORD_USERINFO,
-  GET_USERINFO
+  GET_USERINFO,
+  SAVE_GEOHASH,
+
 } from './mutation-types'
 
 import {setStore, getStore} from '../utils/mUtils.js'
@@ -26,5 +28,10 @@ export default {
     if(!state.login){
       return;
     }
-  }
+  },
+
+//  保存geohash
+  [SAVE_GEOHASH](state, geohash){
+    state.geohash = geohash
+  },
 }

@@ -1,10 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import App from '../App'
-import Header from 'components/header/Header.vue'
 // import Home from 'page/home/Home.vue'  使用require.ensure
 import Login from 'page/login/Login.vue'
-import Msite from 'page/msite/Msite.vue'
+// import Msite from 'page/msite/Msite.vue'
 
 Vue.use(Router)
 // 注意require.ensure与require之间的区别  笔记中记了
@@ -27,11 +26,6 @@ export default new Router({
       path: '/home',
       name: 'home',
       component: Home
-    },
-    {
-      path: '/header',
-      name: 'header',
-      component: Header
     },
     {
       path: '/login',

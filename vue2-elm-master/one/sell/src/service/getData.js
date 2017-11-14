@@ -68,3 +68,19 @@ export const searchplace = (cityid, value) => fetch('/api/v1/pois', {
   keyword: value
 });
 //city end
+
+//msite start
+/**
+ * 获取msite页面地址信息
+ */
+export const msiteAdress = geohash => fetch('/api/v2/pois/' + geohash);
+/**
+ * 获取msite页面食品分类列表
+ */
+export const msiteFoodTypes = geohash => fetch('/api/v2/index_entry', {
+  geohash,
+  group_type: '1',
+  'flags[]': 'F'
+});
+
+//msite end

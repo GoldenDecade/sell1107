@@ -26,7 +26,7 @@ module.exports = {
     path: config.build.assetsRoot,
     //webpack输出bundle文件命名格式
     filename: '[name].js',
-    //webpack编译打包之后的文件所放的目录名字  这里这些文件都放在了 static文件夹中了
+    //webpack编译打包之后的文件所放的目录名字    这里这些文件都放在了 static文件夹中了
     publicPath: process.env.NODE_ENV === 'production'
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath

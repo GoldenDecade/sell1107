@@ -20,6 +20,11 @@
         imgBaseUrl: 'https://fuss10.elemecdn.com', //图片域名地址
       }
     },
+    methods: {
+      loaderMore() {
+        console.log('loaderMore');
+      }
+    }
 
 
   }

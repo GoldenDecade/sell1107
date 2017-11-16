@@ -129,6 +129,7 @@
   import shopList from '../../components/common/shoplist.vue'
   import {cityGuess, msiteAdress, msiteFoodTypes } from '../../service/getData'
   import {mapMutations} from 'vuex'
+  import {loadMore} from '../../components/common/mixin'
   import Swiper from 'swiper'
   //避免
   // import Swiper from '../../plugins/swiper/swiper.js'
@@ -187,7 +188,9 @@
       ...mapMutations([
         'RECORD_ADDRESS', 'SAVE_GEOHASH'
       ]),
+
     },
+
     components: {
       headTop,
       shopList

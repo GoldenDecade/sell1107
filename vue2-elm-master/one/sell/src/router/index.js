@@ -15,6 +15,7 @@ Vue.use(Router)
 const Home = r => require.ensure([], () => r(require('../page/home/Home.vue')), 'home')
 const City = r => require.ensure([], () => r(require('../page/city/City.vue')), 'city')
 const Msite = r => require.ensure([], () => r(require('../page/msite/Msite.vue')), 'msite')
+const Test = r => require.ensure([], () => r(require('../components/common/test.vue')), 'test')
 export default new Router({
   routes: [
     {
@@ -38,10 +39,15 @@ export default new Router({
       component: City
     },
     {
+      path: '/test',
+      component: Test,
+      name: 'test'
+    },
+    {
       path: '/msite',
       component: Msite,
       meta: {keepAlive: true}
-    }
+    },
   ]
 })
 

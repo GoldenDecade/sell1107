@@ -3,59 +3,53 @@ import {getStyle } from '../../utils/mUtils'
 export default loadMore = {
   directives: {
     'load-more': {
-      //一个指令定义对象可以提供如下钩子函数
-      //函数参数如下
-      bind: (el, binding, vnode, oldVnode) => {
+      bind(el, binding) {
         let windowHeight = window.screen.height,
-          height,
-          setTop,
-          paddingBottom,
-          marginBottom,
-          requestFram,
-          oldScrollTop,
           scrollEl,
           heightEl,
-          scrollType = el.attributes.type && el.attributes.type.value,
-          scrollReduce = 2;
-        if(scrollType == 2) {
-          scrollEl = el
-          heightEl = el.children[0]
-        } else {
+          setTop,
+          height,
+          paddingValue,
+          marginValue,
+          requestAF,
+          oldScrollTop,
+          scrollReduce = 2,
+          scrollType = el.attributes.type && el.attributes.type.value
+        if(scrollType == 1) {
           scrollEl = document.body
           heightEl = el
         }
-        el.addEventListener('touchstart', () => {
-          height = heightEl.clientHeight
-          if(scrollType == 2) {
-            height = height
-          }
+
+        el.addEventListener('touchstart', (e) => { //初始化值
           setTop = el.offsetTop
-          paddingBottom = getStyle(el, 'paddingBottom')
-          marginBottom = getStyle(el, 'marginBottom')
-        }, false)
-        el.addEventListener('touchmove', () => {
-          loadMore()
-        }, false)
-        el.addEventListener('touchend', () => {
           oldScrollTop = scrollEl.scrollTop
-          moveEnd()
+          height = heightEl.clientHeight
+          marginValue = getStyle(heightEl, 'margin')
         }, false)
 
-        const moveEnd = () => {
-          requestFram = requestAnimationFrame(() => {
-            if(scrollEl.scrollTop != oldScrollTop){
+        el.addEventListener('touchmove', (e) => {
+          _loadMore()
+        }, false)
+
+        el.addEventListener('touchend', (e) => {
+          oldScrollTop = scrollEl.scrollTop
+          _moveEnd()
+        }, false)
+
+        const _moveEnd = () => {
+          requestAF= requestAnimationFrame(() => {
+            if(scrollEl.scrollTop != oldScrollTop) {
               oldScrollTop = scrollEl.scrollTop
-              moveEnd()
-            } else {
-              cancelAnimationFrame(requestFram)
+              requestAF()
+            }else {
+              cancelAnimationFrame(requestAF)
               height = heightEl.clientHeight
-              loadMore()
+              _loadMore()
             }
           })
         }
-
-        const loadMore = () => {
-          if(scrollEl.scrollTop + windowHeight >= height + setTop + paddingBottom + marginBottom - scrollReduce) {
+        const _loadMore = () => {
+          if(scrollEl.scrollTop + windowHeight >= setTop + height + marginValue + paddingValue - scrollReduce) {
             binding.value()
           }
         }

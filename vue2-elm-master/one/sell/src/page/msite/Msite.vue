@@ -33,12 +33,9 @@
 
     <div class="shop_list_container">
       <header class="shop_header">
-        <svg class="shop_icon">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#shop" style="width: 100%; height: 100%;"></use>
-        </svg>
         <span class="shop_header_title">附近商家</span>
       </header>
-      <shop-list></shop-list>
+      <shop-list v-if="hasGetData" :geohash="geohash"></shop-list>
     </div>
   </div>
 </template>
@@ -131,7 +128,7 @@
   import {mapMutations} from 'vuex'
   import {loadMore} from '../../components/common/mixin'
   import Swiper from 'swiper'
-  //避免
+  //避免重复引入同一个插件或文件
   // import Swiper from '../../plugins/swiper/swiper.js'
   export default {
     props: {
@@ -162,11 +159,14 @@
        })*/
       let res = await msiteAdress(this.geohash)
       this.msiteTitle = res.name
+      //记录当前经纬度
+      this.RECORD_ADDRESS(res)
+      this.hasGetData = true
     },
     mounted() {
     //  获取导航食品类型列表
       msiteFoodTypes(this.geohash).then(res => {
-        console.log(res);
+        // console.log(res);
         let resLength = res.length
         let resArr = [...res]
         let foodArr = []

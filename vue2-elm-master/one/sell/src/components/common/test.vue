@@ -1,4 +1,5 @@
 <template>
+
   <div>
     <input v-wq:min.a.b="hello" type="text" v-model="min" />
     <button @click="add">add</button>
@@ -51,3 +52,4 @@
     }
   }
 </script>
+

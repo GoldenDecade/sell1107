@@ -7,89 +7,290 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <style>
-    p {
-      margin: 0;
-      width: 20px;
-      height: 20px;
+    #wrapper {
+      width: 502px;
+      height: 402px;
+      border: 1px solid green;
+    }
+    #box {
+      width: 500px;
+      height: 400px;
     }
   </style>
 </head>
 <body>
-<p style="background-color: #6dc6be"></p>
-<p style="background-color: #baba9e"></p>
-<p style="background-color: #959bc5"></p>
-<p style="background-color: #cdd2ff"></p>
-<p style="background-color: #919eff"></p>
-<p style="background-color: #7fd498"></p>
-<p style="background-color: #d090d2"></p>
-<p style="background-color: #386343"></p>
-<p style="background-color: #b32bc7"></p>
-<p style="background-color: #de8482"></p>
-<p style="background-color: #ff7272"></p>
-<!--<script>
-  console.log(new Date().getTime())
-  requestAnimationFrame(function() {
-    console.log(new Date().getTime())
-    console.log(234);
-  })
-</script>-->
+<div id="wrapper">
+  <div id="box"></div>
 
-<!--<div id="myDiv" style="background-color: lightblue;width: 0;height: 20px;line-height: 20px;">0%</div>
-<button id="btn">run</button>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+<script src="https://cdn.bootcss.com/echarts/3.8.2/echarts.js"></script>
 <script>
-  var timer;
-  btn.onclick = function(){
-    clearInterval(timer);
-    myDiv.style.width = '0';
-    timer = setInterval(function(){
-      if(parseInt(myDiv.style.width) < 500){
-        myDiv.style.width = parseInt(myDiv.style.width) + 5 + 'px';
-        myDiv.innerHTML =     parseInt(myDiv.style.width)/5 + '%';
-      }else{
-        clearInterval(timer);
-      }
-    },16);
-  }
-</script>-->
+  <!--数据 1个的情况  ： 大于40  小于40-->
+  relation_sub('box', './data.json', true)
+  function relation_sub(id, url) {
+    var rel_bgc = ['#C23531', '#2F4554', '#61A0A8', '#D48265', '#D27968', '#23B7E5']
+    var chart = echarts.init(document.getElementById(id));
+    var option = {
+      toolbox: {
+        right: 20,
+        top: 10,
+        feature: {
+          saveAsImage: {},
+          dataView: {
+            show: true,
+            optionToContent: function(opt) {
+              return setToolTablePie(opt);
+            },
+            lang:["","关闭",""],
+            buttonColor:"rgb(255, 255, 255)",
+            buttonTextColor:"rgb(194, 53, 49)"
+          }
+        },
+      },
+      hoverAnimation: false,
+      tooltip: {
+        formatter: function(p) {
+          if(p.data.name) {
+            return p.data.name.split('_')[1]
+          }else {
+            return p.data.source.split('_')[1] +'>'+ p.data.target.split('_')[1]
+          }
+        }
+      },
 
-<!--<div id="myDiv" style="background-color: lightblue;width: 0;height: 20px;line-height: 20px;">0%</div>
-<button id="btn">run</button>
-<script>
-  var timer;
-  btn.onclick = function(){
-    clearTimeout(timer);
-    myDiv.style.width = '0';
-    timer = setTimeout(function fn(){
-      if(parseInt(myDiv.style.width) < 500){
-        myDiv.style.width = parseInt(myDiv.style.width) + 5 + 'px';
-        myDiv.innerHTML = parseInt(myDiv.style.width)/5 + '%';
-        timer = setTimeout(fn,16);
-      }else{
-        clearTimeout(timer);
-      }
-    },16);
-  }
-</script>-->
+      grid: {
+        left: 20,
+        right: 20,
+        bottom: 10,
+        top: 40,
+        containLabel: true
+      },
+    }
+    chart.setOption(option)
+    chart.showLoading()
+    var category_SymbolSize = function category_SymbolSize(num) {
+      var result = 0
+        switch(parseInt(num)) {
+          case 0:
+            result = 10
+            break;
+          default:
+            result = 5
+            break;
+        }
+      return result
+    }
 
-<div id="myDiv" style="background-color: lightblue;width: 0;height: 20px;line-height: 20px;">0%</div>
-<button id="btn">run</button>
-<script>
-  var timer;
-  btn.onclick = function(){
-    myDiv.style.width = '0';
-    cancelAnimationFrame(timer);
-    timer = requestAnimationFrame(function fn(){
-      if(parseInt(myDiv.style.width) < 500){
-        myDiv.style.width = parseInt(myDiv.style.width) + 5 + 'px';
-        myDiv.innerHTML =     parseInt(myDiv.style.width)/5 + '%';
-        timer = requestAnimationFrame(fn);
-      }else{
-        cancelAnimationFrame(timer);
-      }
-    });
-  }
+    $.ajax({
+      url: url,
+      type: 'get',
+      dataType: 'json',
+      contentType: "application/json",
+      success: function(res, textStatus) {
+        if(res.length == 0){
+          $("#"+id).parent().css("display","none");
+        }
+        var data = [], links = [], categories= [], force = null, layout = 'force';
+        if(res.length == 1) {
+          data.push({
+            name: res[0].label,
+            value: res[0].value,
+            x: chart.getWidth() / 2,
+            y: chart.getHeight() / 2,
+            symbolSize: category_SymbolSize(res[0].category),
+            category: res[0].category,
+            itemStyle: {
+              normal: {
+                color: rel_bgc[res[0].category]
+              }
+            },
+            label: {
+              normal: {
+                show: true,
+                position: 'right',
+                formatter: function(a) {
+                  var arr = a.name.split('_')
+                  return arr[1]
+                },
+                textStyle: {
+                  color: '#4c4c4c',
+                  fontSize: 12,
+                  fontFamily: 'SimHei'
+                }
+              }
+            }
+          })
+          links.push({
+            "source": '',"target": res[0].label
+          })
+          force = {
+            repulsion: 120,
+            gravity: 0.00001,
+            edgeLength: 120
+          }
+          layout = 'none'
+        }else if(res.length < 55) {
+          res.forEach(function(elem, index) {
+            data.push({
+              name: elem.label,
+              value: elem.value,
+              x: null,
+              y: null,
+              symbolSize: category_SymbolSize(elem.category),
+              category: elem.category,
+              itemStyle: {
+                normal: {
+                  color: rel_bgc[elem.category]
+                }
+              },
+              label: {
+                normal: {
+                  show: true,
+                  position: 'right',
+                  formatter: function(a) {
+                    var arr = a.name.split('_')
+                    return arr[1]
+                  },
+                  textStyle: {
+                    color: '#4c4c4c',
+                    fontSize: 12,
+                    fontFamily: 'SimHei'
+                  }
+                }
+              }
+            })
+            if(elem.source == -1) {
+              links.push({
+                "source": '',"target": elem.label
+              })
+            }else {
+              links.push({
+                "source": res[elem.source].label,"target": elem.label
+              })
+            }
+            force = {
+              repulsion: 100,
+              gravity: 0.000000000001,
+              edgeLength: 100
+            }
+          })
+        }else if(res.length < 100) {
+          console.log(100);
+          res.forEach(function(elem, index) {
+            data.push({
+              name: elem.label,
+              value: elem.value,
+              x: null,
+              y: null,
+              symbolSize: category_SymbolSize(elem.category),
+              category: elem.category,
+              itemStyle: {
+                normal: {
+                  color: rel_bgc[elem.category]
+                }
+              },
+              label: {
+                normal: {
+                  show: elem.category < 1 ? true : false,
+                  position: 'right',
+                  formatter: function(a) {
+                    var arr = a.name.split('_')
+                    return arr[1]
+                  },
+                  textStyle: {
+                    color: '#4c4c4c',
+                    fontSize: 12,
+                    fontFamily: 'SimHei'
+                  }
+                }
+              }
+            })
+            if(elem.source == -1) {
+              links.push({
+                "source": '',"target": elem.label
+              })
+            }else {
+              links.push({
+                "source": res[elem.source].label,"target": elem.label
+              })
+            }
+            force = {
+              repulsion: 80,
+              gravity: 0.000001,
+              edgeLength: 80
+            }
 
-  "#6dc6be", "#baba9e", "#959bc5", "#cdd2ff", "#919eff", "#7fd498", "#d090d2", "#386343", "#b32bc7", "#de8482", "#ff7272"
+          })
+        }else{
+          res.forEach(function(elem, index) {
+            data.push({
+              name: elem.label,
+              value: elem.value,
+              x: null,
+              y: null,
+              symbolSize: category_SymbolSize(elem.category),
+              category: elem.category,
+              itemStyle: {
+                normal: {
+                  color: rel_bgc[elem.category]
+                }
+              },
+              label: {
+                normal: {
+                  show: elem.category < 1 ? true : false,
+                  position: 'right',
+                  formatter: function(a) {
+                    var arr = a.name.split('_')
+                    return arr[1]
+                  },
+                  textStyle: {
+                    color: '#4c4c4c',
+                    fontSize: 12,
+                    fontFamily: 'SimHei'
+                  }
+                }
+              }
+            })
+            if(elem.source == -1) {
+              links.push({
+                "source": '',"target": elem.label
+              })
+            }else {
+              links.push({
+                "source": res[elem.source].label,"target": elem.label
+              })
+            }
+            force = {
+              repulsion: 50,
+              gravity: 0.001,
+              edgeLength: 50
+            }
+
+          })
+        }
+        var options = {
+          series: [{
+            type: 'graph',
+            layout: layout,
+            animation: false,
+            silent:false,//是否响应点击事件，为false的时候就是响应
+            draggable: true,
+            force: force,
+            roam: 'scale',
+            nodeScaleRatio: 0.2,
+            categories: [],
+            data: data,
+            links: links
+          }]
+        }
+        chart.setOption(options)
+        chart.hideLoading()
+        window.addEventListener('resize', chart.resize)
+      }
+    })
+    return chart
+  }
 </script>
 </body>
 </html>

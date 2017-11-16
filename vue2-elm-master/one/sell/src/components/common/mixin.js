@@ -1,6 +1,6 @@
 import {getStyle } from '../../utils/mUtils'
 
-export default loadMore = {
+export const loadMore_directive = {
   directives: {
     'load-more': {
       bind(el, binding) {
@@ -37,16 +37,16 @@ export default loadMore = {
         }, false)
 
         const _moveEnd = () => {
-          requestAF= requestAnimationFrame(() => {
-            if(scrollEl.scrollTop != oldScrollTop) {
-              oldScrollTop = scrollEl.scrollTop
-              requestAF()
-            }else {
-              cancelAnimationFrame(requestAF)
-              height = heightEl.clientHeight
-              _loadMore()
-            }
-          })
+          requestAF = requestAnimationFrame(() => {
+              if(scrollEl.scrollTop != oldScrollTop) {
+                oldScrollTop = scrollEl.scrollTop
+                _moveEnd()
+              }else {
+                cancelAnimationFrame(requestAF)
+                height = heightEl.clientHeight
+                _loadMore()
+              }
+            })
         }
         const _loadMore = () => {
           if(scrollEl.scrollTop + windowHeight >= setTop + height + marginValue + paddingValue - scrollReduce) {

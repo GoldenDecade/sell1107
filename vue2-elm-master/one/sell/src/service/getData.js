@@ -41,7 +41,7 @@ export const checkExsis = (checkNumber, type) => fetch('/api/v1/users/exists', {
 /**
  * 手机号登录
  */
-var sendLogin = (code, mobile, validate_token) => fetch('/api/v1/login/app_mobile', {
+export const sendLogin = (code, mobile, validate_token) => fetch('/api/v1/login/app_mobile', {
   code,
   mobile,
   validate_token
@@ -87,9 +87,9 @@ export const msiteFoodTypes = geohash => fetch('/api/v2/index_entry', {
 
 // shoplist start
 /**
- * 获取msite商铺列表
+ * 获取msite商铺中商品列表
  */
-export const shopList = (latitude, longitude, offset, restaurant_category_id = '', restaurant_category_ids = '', order_by = '', delivery_mode = '', support_ids = []) => {
+export const shopList = (latitude, longitude, offset, limit, restaurant_category_id = '', restaurant_category_ids = '', order_by = '', delivery_mode = '', support_ids = []) => {
   let supportStr = '';
   support_ids.forEach(item => {
     if (item.status) {
@@ -100,7 +100,7 @@ export const shopList = (latitude, longitude, offset, restaurant_category_id = '
     latitude,
     longitude,
     offset,
-    limit: '20',
+    limit: limit,
     'extras[]': 'activities',
     keyword: '',
     restaurant_category_id,
@@ -108,6 +108,6 @@ export const shopList = (latitude, longitude, offset, restaurant_category_id = '
     order_by,
     'delivery_mode[]': delivery_mode + supportStr
   };
-  return fetch('/shopping/restaurants', data);
+  return fetch('/api/shopping/restaurants', data);
 };
 //shoplist end

@@ -42,6 +42,43 @@ export const getStyle = (element, attr, NumberMode = 'int') => {
   return NumberMode == 'float' ? parseFloat(res) : parseInt(res)
 }
 
-/*
-* 页面到达底部，加载更多
-* */
+// 是否显示返回顶部按钮，开始，结束，运动三个过程中调用函数判断是否达到目标点
+export const showBack = callback => {
+  let requsetAF,
+    oldScrollTop
+
+  document.addEventListener('scroll', () => {
+    isEnd()
+  }, {passive: true})
+  document.addEventListener('touchstart', () => {
+    isEnd()
+  }, {passive: true})
+  document.addEventListener('touchmove', () => {
+    isEnd()
+  }, {passive: true})
+  document.addEventListener('touchend', () => {
+    oldScrollTop = document.body.scrollTop
+    isStop()
+  }, {passive: true})
+
+  const isStop = () => {
+    requsetAF = requestAnimationFrame(() => {
+      if(oldScrollTop !== document.body.scrollTop) {
+        oldScrollTop = document.body.scrollTop
+        isStop()
+      }else {
+        cancelAnimationFrame(requsetAF)
+      }
+      isEnd()
+    })
+  }
+
+//  判断是否到达终点
+  const isEnd = () =>{
+    if(document.body.scrollTop > 500){
+      callback(true)
+    }else {
+      callback(false)
+    }
+  }
+}

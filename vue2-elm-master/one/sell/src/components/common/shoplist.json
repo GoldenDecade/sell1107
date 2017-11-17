@@ -1,91 +1,147 @@
 {
-  "name": "效果演示",
-  "address": "上海市静安区巨鹿路536-1",
-  "id": 1,
-  "latitude": 31.22166,
-  "longitude": 121.45591,
-  "location": [
-    121.45591,
-    31.22166
+  "activities": [
+    {
+      "attribute": "17.0",
+      "description": "新用户下单立减17元(不与其它活动同享)",
+      "icon_color": "70bc46",
+      "icon_name": "首",
+      "id": 598295817,
+      "is_exclusive_with_food_activity": true,
+      "name": "新用户立减(不与其他活动共享)",
+      "tips": "新用户下单立减17元(不与其它活动同享)",
+      "type": 103
+    },
+    {
+      "attribute": "{\"35\": {\"1\": 12.0, \"0\": 0}, \"60\": {\"1\": 18.0, \"0\": 0}}",
+      "description": "满35减12，满60减18",
+      "icon_color": "f07373",
+      "icon_name": "减",
+      "id": 207801098,
+      "is_exclusive_with_food_activity": true,
+      "name": "小恒",
+      "tips": "满35减12，满60减18",
+      "type": 102
+    },
+    {
+      "description": "8元吃芹菜猪肉水饺",
+      "icon_color": "f07373",
+      "icon_name": "折",
+      "id": 75392865,
+      "name": "8元吃芹菜猪肉水饺",
+      "tips": "8元吃芹菜猪肉水饺"
+    }
   ],
-  "phone": "12356765432",
-  "category": "快餐便当/简餐",
+  "address": "北京市海淀区西北旺东路10号院东区5号楼-1层B103",
+  "albums": [
+    {
+      "count": 1,
+      "cover_image_hash": "c814ac6216a83086bab41a95ca3989adjpeg",
+      "name": "门面",
+      "photos": [
+        {
+          "description": "门头照",
+          "id": 7787470,
+          "image_hash": "c814ac6216a83086bab41a95ca3989adjpeg",
+          "type": "FRONT"
+        }
+      ]
+    },
+    {
+      "count": 1,
+      "cover_image_hash": "93f09c01bbb44da5e14de4a16e63d140jpeg",
+      "name": "大堂",
+      "photos": [
+        {
+          "description": "店内照",
+          "id": 7787471,
+          "image_hash": "93f09c01bbb44da5e14de4a16e63d140jpeg",
+          "type": "HALL"
+        }
+      ]
+    }
+  ],
+  "authentic_id": 4331943083876956,
+  "delivery_mode": {
+    "border": "",
+    "color": "2395FF",
+    "gradient": {
+      "rgb_from": "00AAFF",
+      "rgb_to": "0085FF"
+    },
+    "id": 1,
+    "is_solid": true,
+    "text": "蜂鸟专送",
+    "text_color": "FFFFFF"
+  },
+  "description": "小恒水饺中关村软件园店，位于中关村软件园二期互联网创新中心楼底商，环境优美，餐厅干净整洁，欢迎选购我们家饺子哦~",
+  "distance": 0,
+  "favored": false,
+  "float_delivery_fee": 5,
+  "float_minimum_order_amount": 20,
+  "id": 156055456,
+  "image_path": "f48e931f5a59f5e695c737cad25943e6png",
+  "is_new": false,
+  "is_premium": true,
+  "is_stock_empty": 0,
+  "is_valid": 1,
+  "latitude": 40.046963,
+  "longitude": 116.280399,
+  "max_applied_quantity_per_order": 1,
+  "name": "小恒水饺（中关村软件园店）",
+  "next_business_time": "",
+  "only_use_poi": false,
+  "opening_hours": [
+    "10:00/20:00"
+  ],
+  "order_lead_time": 36,
+  "phone": "13718454234",
+  "piecewise_agent_fee": {
+    "description": "配送费¥5",
+    "extra_fee": 0,
+    "is_extra": false,
+    "rules": [
+      {
+        "fee": 5,
+        "price": 20
+      }
+    ],
+    "tips": "配送费¥5"
+  },
+  "promotion_info": "欢迎观临小恒水饺，手工水饺皮薄馅大、汁多味美，欢迎品尝  因餐盒升级自带醋盒功能，更加环保，以后将不再提供醋盒！",
+  "qualification": {
+    "link": "https://h5.ele.me/shop/certification/#/?restaurant_id=4331943083876956\u0026realId=156055456"
+  },
+  "rating": 4.6,
+  "rating_count": 1106,
+  "recent_order_num": 1624,
+  "recommend": {
+    "is_ad": false,
+    "reason": ""
+  },
+  "regular_customer_count": 0,
+  "scheme": "eleme://catering?restaurant_id=156055456",
+  "status": 1,
   "supports": [
     {
       "description": "已加入“外卖保”计划，食品安全有保障",
       "icon_color": "999999",
       "icon_name": "保",
       "id": 7,
-      "name": "外卖保",
-      "_id": "59a80c0dff11582da6e2c697"
-    },
-    {
-      "description": "准时必达，超时秒赔",
-      "icon_color": "57A9FF",
-      "icon_name": "准",
-      "id": 9,
-      "name": "准时达",
-      "_id": "59a80c0dff11582da6e2c696"
+      "name": "外卖保"
     },
     {
       "description": "该商家支持开发票，请在下单时填写好发票抬头",
       "icon_color": "999999",
       "icon_name": "票",
       "id": 4,
-      "name": "开发票",
-      "_id": "59a80c0dff11582da6e2c695"
+      "name": "开发票"
     }
   ],
-  "status": 0,
-  "recent_order_num": 612,
-  "rating_count": 610,
-  "rating": 4.4,
-  "promotion_info": "好好吃好好吃",
-  "piecewise_agent_fee": {
-    "tips": "配送费约¥5"
-  },
-  "opening_hours": [
-    "8:30/20:30"
-  ],
-  "license": {
-    "catering_service_license_image": "15e386eff0d5699.jpeg",
-    "business_license_image": ""
-  },
-  "is_new": true,
-  "is_premium": true,
-  "image_path": "15e386ec1875697.jpeg",
-  "identification": {
-    "registered_number": "",
-    "registered_address": "",
-    "operation_period": "",
-    "licenses_scope": "",
-    "licenses_number": "",
-    "licenses_date": "",
-    "legal_person": "",
-    "identificate_date": null,
-    "identificate_agency": "",
-    "company_name": ""
-  },
-  "float_minimum_order_amount": 20,
-  "float_delivery_fee": 5,
-  "distance": "1171.7公里",
-  "order_lead_time": "20小时12分钟",
-  "description": "好吃的",
-  "delivery_mode": {
-    "color": "57A9FF",
-    "id": 1,
-    "is_solid": true,
-    "text": "蜂鸟专送"
-  },
-  "activities": [
-    {
-      "icon_name": "减",
-      "name": "满减优惠",
-      "description": "满30减5，满60减8",
-      "icon_color": "f07373",
-      "id": 1,
-      "_id": "59a80c0dff11582da6e2c698"
-    }
-  ],
-  "__v": 0
+  "type": 0,
+  "weight": {
+    "basic": 20000,
+    "maximum": 20000,
+    "unit": 20000,
+    "unit_fee": 20000
+  }
 }

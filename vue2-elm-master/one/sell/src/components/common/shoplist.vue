@@ -60,18 +60,19 @@
 <script type="text/ecmascript-6">
   import {mapState } from 'vuex'
   import {loadMore_directive} from './mixin.js'
-  import {showBack } from '../../utils/mUtils'
+  import {showBack, animate} from '../../utils/mUtils'
   import {shopList} from '../../service/getData'
   export default {
     data() {
       return {
         shopListArr: [], //店铺列表数据
-        shopIsEnd: false, //商品是否已经没有了  如果请求的商品数量小于everyReqShop，则表明已经没有更多商品了
+        shopIsOver: false, //商品是否已经没有了  如果请求的商品数量小于everyReqShop，则表明已经没有更多商品了
         offset: 0, //批次加载店铺列表，每次请求商品列表的时候需要的参数，就像分页时候的数据位置一样
         limit: 20, //约定每次加载20个
         imgBaseUrl: 'http://cangdu.org:8001/img/', //图片地址
         showBackStatus: false, //显示返回顶部按钮
         showLoading: true, // 显示加载动画
+        preventRepeatRequest: false, // 禁止重复请求
       }
     },
     props: [
@@ -86,18 +87,40 @@
         // console.log(JSON.stringify(res[0]));
         this.shopListArr = [...res]
         if (res.length < 20) {
-          this.shopIsEnd = true
+          this.shopIsOver = true
         }
         this.hideLoading()
       //  开始监听scrollTop的值，达到一定程度之后显示返回顶部按钮
-
+        showBack(boolean => {
+          this.showBackStatus = boolean
+        })
 
       },
       async loaderMore() {
-        console.log('loaderMore');
+      //  到达底部加载更多数据
+        if(this.shopIsOver){
+          return
+        }
+        if(this.preventRepeatRequest) { // 禁止重复请求,其实就是一个标识，表示我现在正在请求着呢，你再拉也不能多次请求，必须等我把请求结果返回了 才行
+          return
+        }
+        this.preventRepeatRequest = true  // 标识
+        // 数据的定位每次都要加20
+        this.offset += 20
+        let res = await shopList(this.latitude, this.longitude, this.offset, this.limit, this.restaurantCategoryId)
+        this.shopListArr = [...this.shopListArr, ...res]
+        if(res.length < 20){
+          this.shopIsOver = true
+          return
+        }
+        this.preventRepeatRequest = false  // 标识
       },
       hideLoading(){
         this.showLoading = false
+      },
+      backTop(){
+      //  返回顶部
+        animate(document.body, {scrollTop: '0'}, 400, 'ease-out')
       }
     },
     computed: {

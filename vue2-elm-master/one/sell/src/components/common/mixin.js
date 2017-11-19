@@ -9,8 +9,8 @@ export const loadMore_directive = {
           heightEl,
           setTop,
           height,
-          paddingValue,
-          marginValue,
+          paddingBottom,
+          marginTop,
           requestAF,
           oldScrollTop,
           scrollReduce = 2,
@@ -24,7 +24,8 @@ export const loadMore_directive = {
           setTop = el.offsetTop
           oldScrollTop = scrollEl.scrollTop
           height = heightEl.clientHeight
-          marginValue = getStyle(heightEl, 'margin')
+          marginTop = getStyle(heightEl, 'margin-top')
+          paddingBottom = getStyle(heightEl, 'padding-bottom')
         }, false)
 
         el.addEventListener('touchmove', (e) => {
@@ -49,7 +50,7 @@ export const loadMore_directive = {
             })
         }
         const _loadMore = () => {
-          if(scrollEl.scrollTop + windowHeight >= setTop + height + marginValue + paddingValue - scrollReduce) {
+          if(scrollEl.scrollTop + windowHeight >= setTop + height + marginTop + paddingBottom - scrollReduce) {
             binding.value()
           }
         }

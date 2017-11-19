@@ -123,11 +123,12 @@ export const animate = (el, target, duration = 400, mode = 'ease-out', callback)
     }
   })
   let flag = true  // 假设所有运动到达终点了
+  let status = {} // 记录每个属性是否还需要运动
   const remberSpeed = {} //记录上一个速度值，在ease-in模式下需要用到
   el.timer = setInterval(() => {
-    Object.keys(target).forEach(attr => {
+    Object.keys(target).forEach((attr) => {
+      status[attr] = false // 是否仍需运动
       let iSpeed = 0, // 步长  速度
-        status = false, // 是否仍需运动
         iCurrent = attrStyle(attr) || 0, // 当前属性值
         speedBase = 0, // 每次运动之前的值
         intervalTime; // 将目标值分为多少步执行，数值越大，步长越小
@@ -150,13 +151,16 @@ export const animate = (el, target, duration = 400, mode = 'ease-out', callback)
           intervalTime = duration * 5 / 400
       }
       if(mode !== 'ease-in'){
+        //速度设定值  公式：(target - Base) / 步数 = speed  （base可以为init[属性运动前的值]、current[每次运动后的当前值]）
+        // 匀速： （target - init） / 固定步数
+        // ease-in (离开，先慢后快)  上一次运动的速度值 + （target - init） / 固定步数
+        // 其他： target - current / 固定步数
         iSpeed = (target[attr] - speedBase) / intervalTime
         iSpeed = iSpeed > 0 ? Math.ceil(iSpeed) : Math.floor(iSpeed)
       }
     //  判断是否小于iSpeed，从而判断是否达到终点
-      status = Math.abs(Math.abs(iCurrent) - Math.abs(target[attr])) > Math.abs(iSpeed);
-      if(status){
-        flag = false
+      status[attr] = Math.abs(Math.abs(iCurrent) - Math.abs(target[attr])) > Math.abs(iSpeed);
+      if(status[attr]){
         // scrollTop 与 opacity 要特别处理
         if(attr === 'scrollTop'){
           el.scrollTop = iCurrent + iSpeed
@@ -175,17 +179,22 @@ export const animate = (el, target, duration = 400, mode = 'ease-out', callback)
         }else {
           el.style[attr] = target[attr]
         }
-        flag = true
-
       }
-
+      for(let value of Object.values(status)){
+        if(value){
+          flag = false
+          break;
+        }else {
+          flag = true
+        }
+      }
+      if(flag){
+        clearInterval(el.timer)
+        if(callback){
+          callback()
+        }
+      }
     })
-    if(flag){
-      clearInterval(el.timer)
-      if(callback){
-        callback()
-      }
-    }
   }, 20)
 
 

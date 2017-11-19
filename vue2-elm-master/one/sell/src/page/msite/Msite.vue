@@ -30,13 +30,18 @@
       </div>
     </nav>
     <!--swiper end-->
-
+    <!--商家列表 start-->
     <div class="shop_list_container">
       <header class="shop_header">
         <span class="shop_header_title">附近商家</span>
       </header>
       <shop-list v-if="hasGetData" :geohash="geohash"></shop-list>
+
     </div>
+    <!--商家列表  end-->
+    <!--底部导航 start-->
+    <foot-guide></foot-guide>
+    <!--底部导航 end-->
   </div>
 </template>
 <style lang="stylus" rel="stylesheet">
@@ -104,6 +109,7 @@
 
   .shop_list_container
     margin-top .4rem
+    margin-bottom: 1.95rem
     border-top 1px solid #e4e4e4
     background-color: #fff
     .shop_header
@@ -124,8 +130,9 @@
 <script type="text/ecmascript-6">
   import headTop from '../../components/header/Header.vue'
   import shopList from '../../components/common/shoplist.vue'
+  import footGuide from '../../components/footer/footGuide.vue'
   import {cityGuess, msiteAdress, msiteFoodTypes } from '../../service/getData'
-  import {mapMutations} from 'vuex'
+  import {mapMutations, mapState} from 'vuex'
   import {loadMore} from '../../components/common/mixin'
   import Swiper from 'swiper'
   //避免重复引入同一个插件或文件
@@ -164,7 +171,9 @@
       this.hasGetData = true
     },
     mounted() {
-    //  获取导航食品类型列表
+      // console.log(this.$store.state.geohash)
+
+      //  获取导航食品类型列表
       msiteFoodTypes(this.geohash).then(res => {
         // console.log(res);
         let resLength = res.length
@@ -193,7 +202,8 @@
 
     components: {
       headTop,
-      shopList
+      shopList,
+      footGuide
     }
   }
 </script>

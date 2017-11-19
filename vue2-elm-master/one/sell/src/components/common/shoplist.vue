@@ -23,8 +23,8 @@
               </section>
             </section>
             <section class="rating_order_num_right">
-              <span class="delivery_style delivery_left">{{item.delivery_mode.text}}</span>
-              <span class="delivery-style delivery_right">准时达</span>
+              <span class="delivery_style delivery_left" v-if="item.delivery_mode">{{item.delivery_mode.text}}</span>
+              <span class="delivery-style delivery_right" v-if="zhunshi(item.supports)">准时达</span>
             </section>
           </h5>
           <h5 class="fee_distance">
@@ -34,7 +34,7 @@
               {{item.piecewise_agent_fee.tips}}
             </p>
             <p class="distance_time">
-              <span>{{item.distance > 1000 ? (item.distance / 1000).toFixed(2) + 'km' : item.distance + 'm'}}</span>
+              <span>{{item.distance > 1000 ? ((item.distance / 1000).toFixed(2) + 'km') : (item.distance + 'm')}}</span>
               <span class="segmentation">/</span>
               <span class="order_time">{{item.order_lead_time}}</span>
             </p>
@@ -43,7 +43,7 @@
       </router-link>
     </ul>
 
-    <p v-if="touchend" class="empty_data">没有更多了</p>
+    <p v-if="shopIsOver" class="empty_data">没有更多了</p>
     <!--返回顶部按钮 start-->
     <div class="return_top" @click="backTop" v-if="showBackStatus">
       <svg class="back_top_svg">
@@ -62,6 +62,7 @@
   import {loadMore_directive} from './mixin.js'
   import {showBack, animate} from '../../utils/mUtils'
   import {shopList} from '../../service/getData'
+  import loading from './loading.vue'
   export default {
     data() {
       return {
@@ -90,26 +91,29 @@
           this.shopIsOver = true
         }
         this.hideLoading()
-      //  开始监听scrollTop的值，达到一定程度之后显示返回顶部按钮
+        //  开始监听scrollTop的值，达到一定程度之后显示返回顶部按钮
         showBack(boolean => {
           this.showBackStatus = boolean
         })
 
       },
       async loaderMore() {
-      //  到达底部加载更多数据
-        if(this.shopIsOver){
+        //  到达底部加载更多数据
+        if (this.shopIsOver) {
           return
         }
-        if(this.preventRepeatRequest) { // 禁止重复请求,其实就是一个标识，表示我现在正在请求着呢，你再拉也不能多次请求，必须等我把请求结果返回了 才行
+        if (this.preventRepeatRequest) { // 禁止重复请求,其实就是一个标识，表示我现在正在请求着呢，你再拉也不能多次请求，必须等我把请求结果返回了 才行
           return
         }
         this.preventRepeatRequest = true  // 标识
+        this.showLoading = true
         // 数据的定位每次都要加20
         this.offset += 20
         let res = await shopList(this.latitude, this.longitude, this.offset, this.limit, this.restaurantCategoryId)
+        this.hideLoading()
         this.shopListArr = [...this.shopListArr, ...res]
-        if(res.length < 20){
+        console.log(this.shopListArr);
+        if (res.length < 20) {
           this.shopIsOver = true
           return
         }
@@ -118,8 +122,21 @@
       hideLoading(){
         this.showLoading = false
       },
+      zhunshi(supports){
+        let zhunStatus
+        if((supports instanceof Array) && supports.length){
+          supports.forEach(item => {
+            if(item.icon_name === '准'){
+              zhunStatus = true
+            }
+          })
+        }else {
+          zhunStatus = false
+        }
+        return zhunStatus
+      },
       backTop(){
-      //  返回顶部
+        //  返回顶部
         animate(document.body, {scrollTop: '0'}, 400, 'ease-out')
       }
     },
@@ -127,7 +144,8 @@
       ...mapState(['latitude', 'longitude'])
     },
 //    mixins 的作用就是讲引入的组件、指令等混合到当前代码，如果引入的是组件，在相同的生命周期中有相同的函数则以当前组件的为准，否则都执行
-    mixins: [loadMore_directive]
+    mixins: [loadMore_directive],
+    components: {loading}
 
 
   }
@@ -234,4 +252,17 @@
             .distance_time
               .order_time
                 color #3190e8
+    .empty_data
+      height 1.5rem
+      line-height 1.5rem
+      color #d4d4d4
+    .return_top
+      position fixed
+      right 1rem
+      bottom 2rem
+      width: 1rem
+      height: 1rem
+      background-color: greenyellow
+      text-align center
+
 </style>

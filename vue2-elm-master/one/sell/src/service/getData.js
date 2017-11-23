@@ -111,3 +111,12 @@ export const shopList = (latitude, longitude, offset, limit, restaurant_category
   return fetch('/api/shopping/restaurants', data);
 };
 //shoplist end
+
+//search start
+export const searchRestaurant = (geohash, keyword) => fetch('/api/v4/restaurants', {
+  'extras[]': 'restaurant_activity',
+  geohash,
+  keyword,
+  type: 'search'
+})
+//search end

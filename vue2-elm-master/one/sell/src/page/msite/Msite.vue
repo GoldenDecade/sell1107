@@ -30,15 +30,18 @@
       </div>
     </nav>
     <!--swiper end-->
+
     <!--商家列表 start-->
     <div class="shop_list_container">
       <header class="shop_header">
         <span class="shop_header_title">附近商家</span>
       </header>
       <shop-list v-if="hasGetData" :geohash="geohash"></shop-list>
-
     </div>
-    <!--商家列表  end-->
+    <!--商家列表 end-->
+
+
+
     <!--底部导航 start-->
     <foot-guide></foot-guide>
     <!--底部导航 end-->

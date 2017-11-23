@@ -16,6 +16,8 @@ const Home = r => require.ensure([], () => r(require('../page/home/Home.vue')), 
 const City = r => require.ensure([], () => r(require('../page/city/City.vue')), 'city')
 const Msite = r => require.ensure([], () => r(require('../page/msite/Msite.vue')), 'msite')
 const Test = r => require.ensure([], () => r(require('../components/common/test.vue')), 'test')
+const Search = r => require.ensure([], () => r(require('../page/search/Search.vue')), 'search')
+const Profile = r => require.ensure([], () => r(require('../page/profile/Profile.vue')), 'profile')
 export default new Router({
   routes: [
     {
@@ -48,6 +50,16 @@ export default new Router({
       component: Msite,
       meta: {keepAlive: true}
     },
+    {
+      path: '/search/:geohash',
+      component: Search,
+      name: 'search'
+    },
+    {
+      path: '/profile',
+      component: Profile,
+      name: 'profile'
+    }
   ]
 })
 

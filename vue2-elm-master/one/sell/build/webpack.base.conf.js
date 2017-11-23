@@ -18,6 +18,7 @@ function resolve (dir) {
 module.exports = {
   //入口文件
   entry: {
+    // app: './router.js'
     app: './src/main.js'
   },
   //输出路径和命名规则
@@ -40,7 +41,8 @@ module.exports = {
       'router': path.resolve(__dirname, '../src/router'),
       'assets': path.join(__dirname, '../src/assets'),
       'style': path.join(__dirname, '../src/style'),
-      'page': path.join(__dirname, '../src/page')
+      'page': path.join(__dirname, '../src/page'),
+      'src': path.join(__dirname, '../src')
     }
   },
   //不同类型模块的处理规则
